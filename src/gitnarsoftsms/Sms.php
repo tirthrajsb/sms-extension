@@ -1,7 +1,7 @@
 <?php
-namespace gitnarsoftsms\services\interfaces;
+namespace gitnarsoftsms;
 
-use gitnarsoftsms\models\SmsConfig;
+use gitnarsoftsms\services\SmsServices;
 
 /**
  * SmsServices: Set config for send sms
@@ -13,8 +13,10 @@ use gitnarsoftsms\models\SmsConfig;
  * @license   2018 GirnarSoft Pvt. Ltd.
  * @link      http://www.girnarsoft.com
  */
-interface ISmsServices
+class Sms
 {
-    public function create(): void;
-    public function render(SmsConfig $model, array $smsConfigHeaders, array $smsConfigFormData): void;
+    public static function create(): void
+    {
+        (new SmsServices())->create();
+    }
 }

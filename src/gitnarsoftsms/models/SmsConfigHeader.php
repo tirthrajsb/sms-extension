@@ -15,27 +15,25 @@ use yii\behaviors\TimestampBehavior;
  * @license   2018 GirnarSoft Pvt. Ltd.
  * @link      http://www.girnarsoft.com
  */
-class SmsConfig extends ActiveRecord
+class SmsConfigHeader extends ActiveRecord
 {
-    const TYPE_GET = 'GET';
-    const TYPE_POST = 'POST';
 
     public static function collectionName()
     {
-        return 'sms_config';
+        return 'sms_config_header';
     }
 
     public function rules()
     {
         return [
-            [['name', 'slug', 'type', 'url', 'mobile_prefix', 'mobile_key', 'msg_key', 'headers', 'updated_at', 'created_at'], 'required'],
+            [['sms_config_id', 'header_key', 'header_value', 'description', 'updated_at', 'created_at'], 'required'],
             [['updated_at', 'created_at'], 'integer'],
         ];
     }
 
     public function attributes()
     {
-        return ['_id', 'name', 'slug', 'type', 'url', 'mobile_prefix', 'mobile_key', 'msg_key', 'updated_at', 'created_at'];
+        return ['_id', 'sms_config_id', 'header_key', 'header_value', 'description', 'updated_at', 'created_at'];
     }
 
     /**
@@ -62,21 +60,5 @@ class SmsConfig extends ActiveRecord
                 'typecastAfterFind' => false,
             ],
         ];
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getSmsConfigHeaders()
-    {
-        return $this->hasMany(SmsConfigHeader::className(), ['sms_config_id' => '_id']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getFormData()
-    {
-        return $this->hasMany(SmsConfigFormData::className(), ['sms_config_id' => '_id']);
     }
 }
