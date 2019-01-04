@@ -1,0 +1,14 @@
+{
+    "name": "girnarsoft/sms-services",
+    "authors": [
+        {
+            "name": "girnarsoft"
+        }
+    ],
+    "require": {},
+    "autoload": {
+        "psr-0": {
+            "gitnarsoftsms": "src/"
+        }
+    }
+}
