@@ -13,5 +13,5 @@ namespace gitnarsoftsms\services\interfaces;
  */
 interface ISmsServices
 {
-    public static function renderForm(): string;
+    public static function create(): void;
 }
