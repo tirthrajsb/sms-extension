@@ -26,8 +26,9 @@ class SmsConfigFormData extends ActiveRecord
     public function rules()
     {
         return [
-            [['sms_config_id', 'data_key', 'data_value', 'description', 'updated_at', 'created_at'], 'required'],
+            [['sms_config_id', 'data_key', 'data_value'], 'required'],
             [['updated_at', 'created_at'], 'integer'],
+            [['description'], 'safe']
         ];
     }
 

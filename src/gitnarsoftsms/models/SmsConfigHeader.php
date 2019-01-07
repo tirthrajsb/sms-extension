@@ -26,8 +26,9 @@ class SmsConfigHeader extends ActiveRecord
     public function rules()
     {
         return [
-            [['sms_config_id', 'header_key', 'header_value', 'description', 'updated_at', 'created_at'], 'required'],
+            [['sms_config_id', 'header_key', 'header_value'], 'required'],
             [['updated_at', 'created_at'], 'integer'],
+            [['description'], 'safe']
         ];
     }
 

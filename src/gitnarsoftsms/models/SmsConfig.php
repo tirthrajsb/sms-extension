@@ -28,14 +28,15 @@ class SmsConfig extends ActiveRecord
     public function rules()
     {
         return [
-            [['name', 'slug', 'type', 'url', 'mobile_prefix', 'mobile_key', 'msg_key', 'headers', 'updated_at', 'created_at'], 'required'],
-            [['updated_at', 'created_at'], 'integer'],
+            [['name', 'slug', 'type', 'url', 'mobile_key', 'msg_key', 'timeout'], 'required'],
+            [['timeout', 'updated_at', 'created_at'], 'integer'],
+            [['mobile_prefix'], 'safe']
         ];
     }
 
     public function attributes()
     {
-        return ['_id', 'name', 'slug', 'type', 'url', 'mobile_prefix', 'mobile_key', 'msg_key', 'updated_at', 'created_at'];
+        return ['_id', 'name', 'slug', 'type', 'url', 'mobile_prefix', 'mobile_key', 'msg_key', 'timeout', 'updated_at', 'created_at'];
     }
 
     /**
@@ -69,14 +70,14 @@ class SmsConfig extends ActiveRecord
      */
     public function getSmsConfigHeaders()
     {
-        return $this->hasMany(SmsConfigHeader::className(), ['sms_config_id' => '_id']);
+        return SmsConfigHeader::find((string) $this->_id)->all();
     }
 
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getFormData()
+    public function getSmsConfigFormData()
     {
-        return $this->hasMany(SmsConfigFormData::className(), ['sms_config_id' => '_id']);
+        return SmsConfigFormData::find((string) $this->_id)->all();
     }
 }
