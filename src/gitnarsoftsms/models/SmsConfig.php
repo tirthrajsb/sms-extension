@@ -19,6 +19,7 @@ class SmsConfig extends ActiveRecord
 {
     const TYPE_GET = 'GET';
     const TYPE_POST = 'POST';
+    const TYPE_JSON = 'JSON';
 
     public static function collectionName()
     {
@@ -28,15 +29,14 @@ class SmsConfig extends ActiveRecord
     public function rules()
     {
         return [
-            [['name', 'slug', 'type', 'url', 'mobile_key', 'msg_key', 'timeout'], 'required'],
-            [['timeout', 'updated_at', 'created_at'], 'integer'],
-            [['mobile_prefix'], 'safe']
+            [['name', 'slug', 'type', 'url', 'timeout'], 'required'],
+            [['timeout', 'updated_at', 'created_at'], 'integer']
         ];
     }
 
     public function attributes()
     {
-        return ['_id', 'name', 'slug', 'type', 'url', 'mobile_prefix', 'mobile_key', 'msg_key', 'timeout', 'updated_at', 'created_at'];
+        return ['_id', 'name', 'slug', 'type', 'url', 'timeout', 'updated_at', 'created_at'];
     }
 
     /**
@@ -70,7 +70,7 @@ class SmsConfig extends ActiveRecord
      */
     public function getSmsConfigHeaders()
     {
-        return SmsConfigHeader::find((string) $this->_id)->all();
+        return SmsConfigHeader::find()->where(['sms_config_id' => (string) $this->_id])->all();
     }
 
     /**
@@ -78,6 +78,6 @@ class SmsConfig extends ActiveRecord
      */
     public function getSmsConfigFormData()
     {
-        return SmsConfigFormData::find((string) $this->_id)->all();
+        return SmsConfigFormData::find()->where(['sms_config_id' => (string) $this->_id])->all();
     }
 }

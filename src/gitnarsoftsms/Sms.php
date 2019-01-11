@@ -15,23 +15,33 @@ use gitnarsoftsms\services\SmsServices;
  */
 class Sms
 {
-    public static function create(): void
-    {
-        (new SmsServices())->create();
-    }
-
     public static function save(array $data): \gitnarsoftsms\models\SmsConfig
     {
         return (new SmsServices())->save($data);
     }
 
-    public static function check(array $data): array
+    public static function list(): void
     {
-        (new SmsServices())->check($data);
+        (new SmsServices())->list();
     }
-
+    
     public static function view(string $id): void
     {
         (new SmsServices())->view($id);
+    }
+
+    public static function create(): void
+    {
+        (new SmsServices())->create();
+    }
+
+    public static function update(string $id): void
+    {
+        (new SmsServices())->update($id);
+    }
+
+    public static function check(array $data): array
+    {
+        return (new SmsServices())->check($data);
     }
 }
