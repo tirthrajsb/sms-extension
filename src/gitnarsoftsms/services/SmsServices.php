@@ -25,6 +25,15 @@ use yii\helpers\ArrayHelper;
  */
 class SmsServices implements interfaces\ISmsServices
 {
+    /**
+     * save: Save sms config data & headers
+     * 
+     * @access public
+     * 
+     * @param array $data
+     * 
+     * @return SmsConfig
+     */
     public function save(array $data): SmsConfig
     {
         if(!empty($data['SmsConfig']['_id'])) {
@@ -43,6 +52,16 @@ class SmsServices implements interfaces\ISmsServices
         return $model;
     }
 
+    /**
+     * saveSmsConfigFormData: Save sms config form data values for get/post
+     * 
+     * @access private
+     * 
+     * @param SmsConfig $smsConfig
+     * @param array $data
+     * 
+     * @return void
+     */
     private function saveSmsConfigFormData(SmsConfig $smsConfig, array $data): void
     {
         SmsConfigFormData::deleteAll(['sms_config_id' => (string) $smsConfig->_id]);
@@ -57,6 +76,16 @@ class SmsServices implements interfaces\ISmsServices
         }
     }
 
+    /**
+     * saveSmsConfigHeader: Save sms config headers for get/post
+     * 
+     * @access private
+     * 
+     * @param SmsConfig $smsConfig
+     * @param array $data
+     * 
+     * @return void
+     */
     private function saveSmsConfigHeader(SmsConfig $smsConfig, array $data): void
     {
         SmsConfigHeader::deleteAll(['sms_config_id' => (string) $smsConfig->_id]);
@@ -71,6 +100,13 @@ class SmsServices implements interfaces\ISmsServices
         }
     }
 
+    /**
+     * list: Show list of all sms configration
+     * 
+     * @access public
+     * 
+     * @return void
+     */
     public function list(): void
     {
         ?>
@@ -113,6 +149,13 @@ class SmsServices implements interfaces\ISmsServices
         <?php
     }
 
+    /**
+     * view: Show single sms configration by id
+     * 
+     * @access public
+     * 
+     * @return void
+     */
     public function view(string $id): void
     {
         $model = SmsConfig::findOne($id);
@@ -170,6 +213,13 @@ class SmsServices implements interfaces\ISmsServices
         <?php
     }
 
+    /**
+     * create: Render sms config form for new config
+     * 
+     * @access public
+     * 
+     * @return void
+     */
     public function create(): void
     {
         $model = new SmsConfig();
@@ -184,6 +234,15 @@ class SmsServices implements interfaces\ISmsServices
         $this->render($model, [$smsConfigHeader], [$smsConfigFormData]);
     }
 
+    /**
+     * update: Show sms config form for update current configration
+     * 
+     * @access public
+     * 
+     * @param string $id
+     * 
+     * @return void
+     */
     public function update(string $id): void
     {
         $model = SmsConfig::findOne($id);
@@ -202,6 +261,16 @@ class SmsServices implements interfaces\ISmsServices
         $this->render($model, $smsConfigHeader, $smsConfigFormData);
     }
 
+    /**
+     * render: Render sms config form for both create & update
+     * 
+     * @access public
+     * @param SmsConfig $model
+     * @param array $smsConfigHeaders
+     * @param array $smsConfigFormData
+     * 
+     * @return void
+     */
     public function render(SmsConfig $model, array $smsConfigHeaders, array $smsConfigFormData): void
     {
         ?>
@@ -392,7 +461,74 @@ class SmsServices implements interfaces\ISmsServices
         <?php
     }
 
+    /**
+     * check: Check sms config by hitting data to sms service
+     * 
+     * @access public
+     * 
+     * @param array $data
+     * 
+     * @return array
+     */
     public function check(array $data): array
+    {
+        $data['SmsConfig'] = $data['SmsConfig'] ?? [];
+        $data['SmsConfigFormData'] = $data['SmsConfigFormData'] ?? [];
+        $data['SmsConfigHeader'] = $data['SmsConfigHeader'] ?? [];
+
+        return $this->send($data);
+    }
+
+    /**
+     * sendSms: Send sms to user and get sms config info by slug
+     * 
+     * @access public
+     * 
+     * @param string $slug
+     * @param array $array
+     * 
+     * @return array
+     */
+    public function sendSms(string $slug, array $data): array
+    {
+        $model = SmsConfig::findOne(['slug' => $slug]);
+
+        if (!$model) {
+            throw new \yii\web\NotFoundHttpException("$slug: Configration not availabel");
+        }
+
+        $params['SmsConfig'] = $model->attributes;
+        $params['SmsConfigFormData'] = [];
+        $params['SmsConfigHeader'] = [];
+
+        if($model->smsConfigFormData) {
+            foreach($model->smsConfigFormData as $formData) {
+                $params['SmsConfigFormData'][] = [
+                    'data_key' => $formData->data_key,
+                    'data_value' => \Yii::t('app', $formData->data_value, $data),
+                ];
+            }
+        }
+
+        if($model->smsConfigHeaders) {
+            foreach($model->smsConfigHeaders as $headers) {
+                $params['SmsConfigHeader'][] = $headers->attributes;
+            }
+        }
+
+        return $this->send($params);
+    }
+
+    /**
+     * send: Send sms to user
+     * 
+     * @access private
+     * 
+     * @param array $data
+     * 
+     * @return array
+     */
+    private function send(array $data): array
     {
         try {
             $url = $data['SmsConfig']['url'];

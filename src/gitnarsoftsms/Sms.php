@@ -44,4 +44,9 @@ class Sms
     {
         return (new SmsServices())->check($data);
     }
+
+    public static function sendSms(string $slug, array $data): array
+    {
+        return (new SmsServices())->sendSms($slug, $data);
+    }
 }
