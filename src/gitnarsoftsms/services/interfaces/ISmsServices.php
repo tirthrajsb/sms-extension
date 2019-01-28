@@ -27,56 +27,6 @@ interface ISmsServices
     public function save(array $data): SmsConfig;
 
     /**
-     * list: Show list of all sms configration
-     * 
-     * @access public
-     * 
-     * @return void
-     */
-    public function list(): void;
-
-    /**
-     * view: Show single sms configration by id
-     * 
-     * @access public
-     * 
-     * @return void
-     */
-    public function view(string $id): void;
-
-    /**
-     * create: Render sms config form for new config
-     * 
-     * @access public
-     * 
-     * @return void
-     */
-    public function create(): void;
-
-    /**
-     * update: Show sms config form for update current configration
-     * 
-     * @access public
-     * 
-     * @param string $id
-     * 
-     * @return void
-     */
-    public function update(string $id): void;
-
-    /**
-     * render: Render sms config form for both create & update
-     * 
-     * @access public
-     * @param SmsConfig $model
-     * @param array $smsConfigHeaders
-     * @param array $smsConfigFormData
-     * 
-     * @return void
-     */
-    public function render(SmsConfig $model, array $smsConfigHeaders, array $smsConfigFormData): void;
-
-    /**
      * check: Check sms config by hitting data to sms service
      * 
      * @access public
@@ -86,7 +36,7 @@ interface ISmsServices
      * @return array
      */
     public function check(array $data): array;
-
+    
     /**
      * sendSms: Send sms to user and get sms config info by slug
      * 
