@@ -16,6 +16,10 @@ return [
 ]
 -------------
 
+#Use this code to send sms
+
+\gitnarsoftsms\Sms::sendSms(string $slug, array $data)
+
 With the above configuration, you will be able to access SmsModule in your browser using
 the URL `http://www.example.com/index.php?r=sms-config`
 
