@@ -20,6 +20,17 @@ return [
 
 \gitnarsoftsms\Sms::sendSms(string $slug, array $data)
 
+#Set config tip's
+Use {your key} in form data of header for dynamic value
+
+Examle
+----------------------
+Key    |   Value      |
+----------------------
+mobile |   {mobile}   |
+----------------------
+msg    |   {message}  |
+----------------------
 With the above configuration, you will be able to access SmsModule in your browser using
 the URL `http://www.example.com/index.php?r=sms-config`
 
