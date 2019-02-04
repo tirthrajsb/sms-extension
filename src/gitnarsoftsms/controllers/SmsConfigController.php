@@ -28,6 +28,10 @@ class SmsConfigController extends \yii\web\Controller
      */
     public function beforeAction($action)
     {
+        if (\Yii::$app->getUser()->isGuest) {
+            return $this->redirect(\Yii::$app->user->loginUrl)->send();
+        }
+        
         \Yii::$app->response->format = Response::FORMAT_HTML;
         return parent::beforeAction($action);
     }
