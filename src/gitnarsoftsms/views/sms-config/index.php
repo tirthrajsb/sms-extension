@@ -2,7 +2,7 @@
 use yii\helpers\Html;
 use yii\grid\GridView;
 use yii\data\ActiveDataProvider;
-use yii\mongodb\Query;
+use gitnarsoftsms\models\SmsConfig;
 
 $this->title = \Yii::t('app', 'SMS Config List');
 $this->params['breadcrumbs'][] = $this->title;
@@ -12,7 +12,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <h3><?= \Yii::t('app', 'Form Data') ?></h3>
     <?= GridView::widget([
         'dataProvider' => (new ActiveDataProvider([
-            'query' => ((new Query())->from('sms_config')),
+            'query' => SmsConfig::find(),
         ])),
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
