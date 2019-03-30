@@ -29,15 +29,14 @@ class SmsConfig extends ActiveRecord
     public function rules()
     {
         return [
-            [['name', 'slug', 'type', 'url', 'timeout'], 'required'],
-            ['slug', 'unique'],
+            [['name', 'type', 'url', 'timeout'], 'required'],
             [['timeout', 'updated_at', 'created_at'], 'integer']
         ];
     }
 
     public function attributes()
     {
-        return ['_id', 'name', 'slug', 'type', 'url', 'timeout', 'updated_at', 'created_at'];
+        return ['_id', 'name', 'type', 'url', 'timeout', 'updated_at', 'created_at'];
     }
 
     /**

@@ -4,6 +4,7 @@ namespace gitnarsoftsms\services;
 use gitnarsoftsms\models\SmsConfig;
 use gitnarsoftsms\models\SmsConfigHeader;
 use gitnarsoftsms\models\SmsConfigFormData;
+use gitnarsoftsms\models\SmsCommunication;
 use yii\helpers\ArrayHelper;
 
 /**
@@ -123,18 +124,18 @@ class SmsServices implements interfaces\ISmsServices
      */
     public function sendSms(string $slug, array $data): array
     {
-        $model = SmsConfig::findOne(['slug' => $slug]);
+        $model = SmsCommunication::findOne(['slug' => $slug]);
 
         if (!$model) {
             throw new \yii\web\NotFoundHttpException("$slug: Configration not availabel");
         }
 
-        $params['SmsConfig'] = $model->attributes;
+        $params['SmsConfig'] = $model->smsConfig->attributes;
         $params['SmsConfigFormData'] = [];
         $params['SmsConfigHeader'] = [];
 
-        if($model->smsConfigFormData) {
-            foreach($model->smsConfigFormData as $formData) {
+        if($model->smsConfig->smsConfigFormData) {
+            foreach($model->smsConfig->smsConfigFormData as $formData) {
                 $params['SmsConfigFormData'][] = [
                     'data_key' => $formData->data_key,
                     'data_value' => \Yii::t('app', $formData->data_value, $data),
@@ -142,8 +143,8 @@ class SmsServices implements interfaces\ISmsServices
             }
         }
 
-        if($model->smsConfigHeaders) {
-            foreach($model->smsConfigHeaders as $headers) {
+        if($model->smsConfig->smsConfigHeaders) {
+            foreach($model->smsConfig->smsConfigHeaders as $headers) {
                 $params['SmsConfigHeader'][] = $headers->attributes;
             }
         }

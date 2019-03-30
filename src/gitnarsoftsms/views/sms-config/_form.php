@@ -14,13 +14,10 @@ use gitnarsoftsms\models\SmsConfigHeader;
         <?php endif; ?>
         <div class="box box-success box-body">
             <div class="row">
-                <div class="form-group col-md-4">
+                <div class="form-group col-md-6">
                     <?= $form->field($model, 'name')->textInput() ?>
                 </div>
-                <div class="form-group col-md-4">
-                    <?= $form->field($model, 'slug')->textInput() ?>
-                </div>
-                <div class="form-group col-md-4">
+                <div class="form-group col-md-6">
                     <?= $form->field($model, 'timeout')->textInput() ?>
                 </div>
             </div>

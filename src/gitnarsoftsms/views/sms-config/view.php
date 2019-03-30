@@ -17,7 +17,6 @@ $this->params['breadcrumbs'][] = $this->title;
         'model' => $model,
         'attributes' => [
             'name',
-            'slug',
             'timeout',
             'type',
             'url',
