@@ -15,29 +15,26 @@ use yii\behaviors\TimestampBehavior;
  * @license   2018 GirnarSoft Pvt. Ltd.
  * @link      http://www.girnarsoft.com
  */
-class SmsConfig extends ActiveRecord
+class SmsCommunication extends ActiveRecord
 {
-    const TYPE_GET = 'GET';
-    const TYPE_POST = 'POST';
-    const TYPE_JSON = 'JSON';
 
     public static function collectionName()
     {
-        return 'sms_config';
+        return 'sms_communication';
     }
 
     public function rules()
     {
         return [
-            [['name', 'slug', 'type', 'url', 'timeout'], 'required'],
+            [['sms_config_id', 'slug', 'description'], 'required'],
             ['slug', 'unique'],
-            [['timeout', 'updated_at', 'created_at'], 'integer']
+            [['updated_at', 'created_at'], 'integer']
         ];
     }
 
     public function attributes()
     {
-        return ['_id', 'name', 'slug', 'type', 'url', 'timeout', 'updated_at', 'created_at'];
+        return ['_id', 'sms_config_id', 'slug', 'description', 'updated_at', 'created_at'];
     }
 
     /**
@@ -69,16 +66,8 @@ class SmsConfig extends ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getSmsConfigHeaders()
+    public function getSmsConfig()
     {
-        return SmsConfigHeader::find()->where(['sms_config_id' => (string) $this->_id])->all();
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getSmsConfigFormData()
-    {
-        return SmsConfigFormData::find()->where(['sms_config_id' => (string) $this->_id])->all();
+        return $this->hasOne(SmsConfig::className(), ['_id' => 'sms_config_id']);
     }
 }

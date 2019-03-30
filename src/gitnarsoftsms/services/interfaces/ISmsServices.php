@@ -48,4 +48,13 @@ interface ISmsServices
      * @return array
      */
     public function sendSms(string $slug, array $data): array;
+
+    /**
+     * getSmsServices: Return all sms config service providers list
+     * 
+     * @access public
+     * 
+     * @return array
+     */
+    public function getSmsServices(): array;
 }

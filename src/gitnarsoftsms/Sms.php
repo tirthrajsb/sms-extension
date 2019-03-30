@@ -29,4 +29,9 @@ class Sms
     {
         return (new SmsServices())->sendSms($slug, $data);
     }
+
+    public static function getSmsServices(): array
+    {
+        return (new SmsServices())->getSmsServices();
+    }
 }

@@ -205,4 +205,26 @@ class SmsServices implements interfaces\ISmsServices
             return ['exception' => $e];
         }
     }
+
+    /**
+     * getSmsServices: Return all sms config service providers list
+     * 
+     * @access public
+     * 
+     * @return array
+     */
+    public function getSmsServices(): array
+    {
+        $services = [];
+        $resuts = SmsConfig::find()->all();
+
+        foreach($resuts as $resut) {
+            $services[] = [
+                '_id' => (string) $resut->_id,
+                'name' => (string) $resut->name
+            ];
+        }
+
+        return $services;
+    }
 }

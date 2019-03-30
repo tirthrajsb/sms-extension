@@ -45,7 +45,12 @@ class Module extends \yii\base\Module implements BootstrapInterface
             ['class' => 'yii\web\UrlRule', 'pattern' => 'sms-config/view/<id>', 'route' => $this->id . '/sms-config/view'],
             ['class' => 'yii\web\UrlRule', 'pattern' => 'sms-config/create', 'route' => $this->id . '/sms-config/create'],
             ['class' => 'yii\web\UrlRule', 'pattern' => 'sms-config/update/<id>', 'route' => $this->id . '/sms-config/update'],
-            ['class' => 'yii\web\UrlRule', 'pattern' => 'sms-config/check', 'route' => $this->id . '/sms-config/check']
+            ['class' => 'yii\web\UrlRule', 'pattern' => 'sms-config/check', 'route' => $this->id . '/sms-config/check'],
+            ['class' => 'yii\web\UrlRule', 'pattern' => 'sms-communication', 'route' => $this->id . '/sms-communication/index'],
+            ['class' => 'yii\web\UrlRule', 'pattern' => 'sms-communication/index', 'route' => $this->id . '/sms-communication/index'],
+            ['class' => 'yii\web\UrlRule', 'pattern' => 'sms-communication/view/<id>', 'route' => $this->id . '/sms-communication/view'],
+            ['class' => 'yii\web\UrlRule', 'pattern' => 'sms-communication/create', 'route' => $this->id . '/sms-communication/create'],
+            ['class' => 'yii\web\UrlRule', 'pattern' => 'sms-communication/update/<id>', 'route' => $this->id . '/sms-communication/update']
         ], false);
     }
 }
