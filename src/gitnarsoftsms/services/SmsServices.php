@@ -126,9 +126,12 @@ class SmsServices implements interfaces\ISmsServices
     public function sendSms(string $username, string $password, array $data): array
     {
         $model = SmsCommunication::findOne(['username' => $username]);
-
+        $hash = \Yii::$app->getSecurity()->generatePasswordHash($password);
+        
         if (!$model) {
             throw new \yii\web\NotFoundHttpException("$username: Configration not availabel");
+        } elseif (!$model->password != $hash) {
+            throw new \yii\web\NotFoundHttpException("$username: Invalid credentials");
         }
 
         $params['SmsConfig'] = $model->smsConfig->attributes;
