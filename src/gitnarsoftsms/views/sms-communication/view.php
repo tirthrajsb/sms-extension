@@ -12,6 +12,7 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="coupon box box-success box-body">
     <p>
         <?= Html::a(\Yii::t('app', 'Update'), ['update', 'id' => (string) $model->_id], ['class' => 'btn btn-primary']) ?>
+        <?= Html::a(\Yii::t('app', 'Change Password'), ['update-password', 'id' => (string) $model->_id], ['class' => 'btn btn-primary']) ?>
     </p>
     <?= DetailView::widget([
         'model' => $model,
@@ -24,7 +25,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     return $model->smsConfig->name;
                 }
             ],
-            'slug',
+            'username',
             'description',
             'updated_at:date',
             'created_at:date'

@@ -160,7 +160,7 @@ use gitnarsoftsms\models\SmsConfigHeader;
         <div class="box box-success box-body">
             <div class="row">
                 <div class="form-group col-md-12">
-                    <?= Html::submitButton(\Yii::t('app', 'Save Form'), ['class' => 'btn btn-primary']) ?>
+                    <?= Html::submitButton(\Yii::t('app', ($model->isNewRecord ? 'Create' : 'Update')), ['class' => 'btn btn-primary']) ?>
                     <?= Html::button(\Yii::t('app', 'Check'), ['id' => 'gs-sms-check','class' => 'btn btn-primary', 'type' => 'button']) ?>
                 </div>
             </div>

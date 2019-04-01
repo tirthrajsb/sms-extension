@@ -20,7 +20,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'label' => 'SMS Service',
                 'value' => 'smsConfig.name',
             ],
-            'slug',
+            'username',
             'updated_at:date',
             'created_at:date',
             [

@@ -77,9 +77,12 @@ class SmsCommunicationController extends \yii\web\Controller
     public function actionCreate()
     {
         $model = new SmsCommunication();
+        $model->scenario = 'create';
         $model->load(\Yii::$app->request->post());
 
         if (\Yii::$app->request->isPost && $model->validate()) {
+            $model->password = \Yii::$app->getSecurity()->generatePasswordHash($model->password);
+            $model->confirmPassword = $model->password;
             $model->save();
             
             if (!$model->getErrors()) {
@@ -123,6 +126,41 @@ class SmsCommunicationController extends \yii\web\Controller
         return $this->render('update', [
             'model' => $model,
             'smsServices' => ArrayHelper::map(Sms::getSmsServices(), '_id', 'name')
+        ]);
+    }
+
+    /**
+     * actionUpdate: Update sms communication
+     *
+     * @access public
+     *
+     * @param string $id
+     *
+     * @return mixed
+     */
+    public function actionUpdatePassword($id)
+    {
+        $model = SmsCommunication::findOne($id);
+
+        if (!$model) {
+            throw new \yii\web\NotFoundHttpException('The requested page does not exist.');
+        }
+
+        $model->scenario = 'create';
+        $model->load(\Yii::$app->request->post());
+        
+        if (\Yii::$app->request->isPost && $model->validate()) {
+            $model->password = \Yii::$app->getSecurity()->generatePasswordHash($model->password);
+            $model->confirmPassword = $model->password;
+            $model->save();
+            
+            if (!$model->getErrors()) {
+                return $this->redirect(['view', 'id' => (string) $model->_id]);
+            }
+        }
+
+        return $this->render('update-password', [
+            'model' => $model
         ]);
     }
 }

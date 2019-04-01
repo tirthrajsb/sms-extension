@@ -113,21 +113,22 @@ class SmsServices implements interfaces\ISmsServices
     }
 
     /**
-     * sendSms: Send sms to user and get sms config info by slug
+     * sendSms: Send sms to user and get sms config info by username
      * 
      * @access public
      * 
-     * @param string $slug
+     * @param string $username
+     * @param string $password
      * @param array $array
      * 
      * @return array
      */
-    public function sendSms(string $slug, array $data): array
+    public function sendSms(string $username, string $password, array $data): array
     {
-        $model = SmsCommunication::findOne(['slug' => $slug]);
+        $model = SmsCommunication::findOne(['username' => $username]);
 
         if (!$model) {
-            throw new \yii\web\NotFoundHttpException("$slug: Configration not availabel");
+            throw new \yii\web\NotFoundHttpException("$username: Configration not availabel");
         }
 
         $params['SmsConfig'] = $model->smsConfig->attributes;

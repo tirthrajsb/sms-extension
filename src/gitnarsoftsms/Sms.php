@@ -25,9 +25,9 @@ class Sms
         return (new SmsServices())->check($data);
     }
 
-    public static function sendSms(string $slug, array $data): array
+    public function sendSms(string $username, string $password, array $data): array
     {
-        return (new SmsServices())->sendSms($slug, $data);
+        return (new SmsServices())->sendSms($username, $password, $data);
     }
 
     public static function getSmsServices(): array

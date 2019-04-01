@@ -50,7 +50,8 @@ class Module extends \yii\base\Module implements BootstrapInterface
             ['class' => 'yii\web\UrlRule', 'pattern' => 'sms-communication/index', 'route' => $this->id . '/sms-communication/index'],
             ['class' => 'yii\web\UrlRule', 'pattern' => 'sms-communication/view/<id>', 'route' => $this->id . '/sms-communication/view'],
             ['class' => 'yii\web\UrlRule', 'pattern' => 'sms-communication/create', 'route' => $this->id . '/sms-communication/create'],
-            ['class' => 'yii\web\UrlRule', 'pattern' => 'sms-communication/update/<id>', 'route' => $this->id . '/sms-communication/update']
+            ['class' => 'yii\web\UrlRule', 'pattern' => 'sms-communication/update/<id>', 'route' => $this->id . '/sms-communication/update'],
+            ['class' => 'yii\web\UrlRule', 'pattern' => 'sms-communication/update-password/<id>', 'route' => $this->id . '/sms-communication/update-password']
         ], false);
     }
 }

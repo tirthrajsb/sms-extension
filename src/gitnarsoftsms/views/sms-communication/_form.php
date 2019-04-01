@@ -17,8 +17,17 @@ use yii\widgets\ActiveForm;
                         ?>
                     </div>
                     <div class="form-group col-md-12">
-                        <?= $form->field($model, 'slug')->textInput() ?>
+                        <?= $form->field($model, 'username')->textInput() ?>
                     </div>
+                    <?php if ($model->isNewRecord) : ?>
+                        <div class="form-group col-md-12">
+                            <?= $form->field($model, 'password')->passwordInput() ?>
+                        </div>
+
+                        <div class="form-group col-md-12">
+                            <?= $form->field($model, 'confirmPassword')->passwordInput() ?>
+                        </div>
+                    <?php endif; ?>
                 </div>
                 <div class="form-group col-md-6">
                     <div class="form-group col-md-12">
@@ -28,7 +37,7 @@ use yii\widgets\ActiveForm;
             </div>
             <div class="row">
                 <div class="form-group col-md-12">
-                    <?= Html::submitButton(\Yii::t('app', 'Save Form'), ['class' => 'btn btn-primary']) ?>
+                    <?= Html::submitButton(\Yii::t('app', ($model->isNewRecord ? 'Create' : 'Update')), ['class' => 'btn btn-primary']) ?>
                 </div>
             </div>
         </div>

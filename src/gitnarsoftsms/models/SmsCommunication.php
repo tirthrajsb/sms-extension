@@ -17,6 +17,7 @@ use yii\behaviors\TimestampBehavior;
  */
 class SmsCommunication extends ActiveRecord
 {
+    public $confirmPassword;
 
     public static function collectionName()
     {
@@ -26,15 +27,17 @@ class SmsCommunication extends ActiveRecord
     public function rules()
     {
         return [
-            [['sms_config_id', 'slug', 'description'], 'required'],
-            ['slug', 'unique'],
+            [['sms_config_id', 'username', 'password', 'description'], 'required'],
+            ['username', 'unique'],
+            ['confirmPassword', 'required', 'on' => 'create'],
+            ['confirmPassword', 'compare', 'compareAttribute'=>'password', 'message' => \Yii::t('app', "Passwords don't match")],
             [['updated_at', 'created_at'], 'integer']
         ];
     }
 
     public function attributes()
     {
-        return ['_id', 'sms_config_id', 'slug', 'description', 'updated_at', 'created_at'];
+        return ['_id', 'sms_config_id', 'username', 'password', 'description', 'updated_at', 'created_at'];
     }
 
     /**

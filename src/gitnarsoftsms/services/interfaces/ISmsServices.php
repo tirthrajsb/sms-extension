@@ -38,16 +38,17 @@ interface ISmsServices
     public function check(array $data): array;
     
     /**
-     * sendSms: Send sms to user and get sms config info by slug
+     * sendSms: Send sms to user and get sms config info by username
      * 
      * @access public
      * 
-     * @param string $slug
+     * @param string $username
+     * @param string $password
      * @param array $array
      * 
      * @return array
      */
-    public function sendSms(string $slug, array $data): array;
+    public function sendSms(string $username, string $password, array $data): array;
 
     /**
      * getSmsServices: Return all sms config service providers list
