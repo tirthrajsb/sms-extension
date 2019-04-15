@@ -1,7 +1,6 @@
 <?php
 namespace gitnarsoftsms\models;
 
-use yii\mongodb\ActiveRecord;
 use yii\behaviors\AttributeTypecastBehavior;
 use yii\behaviors\TimestampBehavior;
 

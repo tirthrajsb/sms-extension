@@ -2,11 +2,12 @@
 
 namespace gitnarsoftsms\controllers;
 
-use gitnarsoftsms\Sms;
+use yii\base\Module;
 use yii\web\Response;
 use gitnarsoftsms\models\SmsConfig;
 use gitnarsoftsms\models\SmsConfigHeader;
 use gitnarsoftsms\models\SmsConfigFormData;
+use gitnarsoftsms\services\SmsService;
 
 /**
  * SmsConfigController for all types of sms service config
@@ -21,7 +22,13 @@ use gitnarsoftsms\models\SmsConfigFormData;
  */
 class SmsConfigController extends \yii\web\Controller
 {
-    //public $layout = 'main';
+    private $smsService;
+
+    public function __construct($id, Module $module, SmsService $smsService, $config = [])
+    {
+        $this->smsService = $smsService;
+        parent::__construct($id, $module, $config);
+    }
 
     /**
      * {@inheritdoc}
@@ -83,9 +90,9 @@ class SmsConfigController extends \yii\web\Controller
         $model->load(\Yii::$app->request->post());
 
         if (\Yii::$app->request->isPost && $model->validate()) {
-            $model = Sms::save(\Yii::$app->request->post());
-            
-            if (!$model->getErrors()) {
+            if($model->save()) {
+                $this->saveSmsConfigFormData($model, \Yii::$app->request->post('SmsConfigFormData'));
+                $this->saveSmsConfigHeader($model, \Yii::$app->request->post('SmsConfigHeader'));
                 return $this->redirect(['view', 'id' => (string) $model->_id]);
             }
         }
@@ -120,9 +127,9 @@ class SmsConfigController extends \yii\web\Controller
         $model->load(\Yii::$app->request->post());
         
         if (\Yii::$app->request->isPost && $model->validate()) {
-            $model = Sms::save(\Yii::$app->request->post());
-            
-            if (!$model->getErrors()) {
+            if($model->save()) {
+                $this->saveSmsConfigFormData($model, \Yii::$app->request->post('SmsConfigFormData'));
+                $this->saveSmsConfigHeader($model, \Yii::$app->request->post('SmsConfigHeader'));
                 return $this->redirect(['view', 'id' => (string) $model->_id]);
             }
         }
@@ -138,6 +145,54 @@ class SmsConfigController extends \yii\web\Controller
     }
 
     /**
+     * saveSmsConfigFormData: Save sms config form data values for get/post
+     * 
+     * @access private
+     * 
+     * @param SmsConfig $smsConfig
+     * @param array $data
+     * 
+     * @return void
+     */
+    private function saveSmsConfigFormData(SmsConfig $smsConfig, array $data): void
+    {
+        SmsConfigFormData::deleteAll(['sms_config_id' => (string) $smsConfig->_id]);
+
+        foreach($data as $row) {
+            if(!empty($row['data_key'])) {
+                $model = new SmsConfigFormData();
+                $model->load(['SmsConfigFormData' => $row]);
+                $model->sms_config_id = (string) $smsConfig->_id;
+                $model->save();
+            }
+        }
+    }
+
+    /**
+     * saveSmsConfigHeader: Save sms config headers for get/post
+     * 
+     * @access private
+     * 
+     * @param SmsConfig $smsConfig
+     * @param array $data
+     * 
+     * @return void
+     */
+    private function saveSmsConfigHeader(SmsConfig $smsConfig, array $data): void
+    {
+        SmsConfigHeader::deleteAll(['sms_config_id' => (string) $smsConfig->_id]);
+
+        foreach($data as $row) {
+            if(!empty($row['header_key'])) {
+                $model = new SmsConfigHeader();
+                $model->load(['SmsConfigHeader' => $row]);
+                $model->sms_config_id = (string) $smsConfig->_id;
+                $model->save();
+            }
+        }
+    }
+
+    /**
      * actionCheck: Check sms api
      *
      * @access public
@@ -149,7 +204,7 @@ class SmsConfigController extends \yii\web\Controller
         \Yii::$app->response->format = Response::FORMAT_JSON;
 
         if (\Yii::$app->request->isPost) {
-            return Sms::check(\Yii::$app->request->post());
+            return $this->smsService->check(\Yii::$app->request->post());
         }
         
         return [];

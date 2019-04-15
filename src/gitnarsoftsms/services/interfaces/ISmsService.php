@@ -4,7 +4,7 @@ namespace gitnarsoftsms\services\interfaces;
 use gitnarsoftsms\models\SmsConfig;
 
 /**
- * SmsServices: Set config for send sms
+ * SmsService: Set config for send sms
  *
  * @category  PHP
  * @package   SMS
@@ -13,19 +13,8 @@ use gitnarsoftsms\models\SmsConfig;
  * @license   2018 GirnarSoft Pvt. Ltd.
  * @link      http://www.girnarsoft.com
  */
-interface ISmsServices
+interface ISmsService
 {
-    /**
-     * save: Save sms config data & headers
-     * 
-     * @access public
-     * 
-     * @param array $data
-     * 
-     * @return SmsConfig
-     */
-    public function save(array $data): SmsConfig;
-
     /**
      * check: Check sms config by hitting data to sms service
      * 
@@ -51,11 +40,11 @@ interface ISmsServices
     public function sendSms(string $username, string $password, array $data): array;
 
     /**
-     * getSmsServices: Return all sms config service providers list
+     * getSmsService: Return all sms config service providers list
      * 
      * @access public
      * 
      * @return array
      */
-    public function getSmsServices(): array;
+    public function getSmsService(): array;
 }

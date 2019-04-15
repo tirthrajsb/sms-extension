@@ -1,14 +1,14 @@
 <?php
 namespace gitnarsoftsms\services;
 
+use yii\helpers\ArrayHelper;
 use gitnarsoftsms\models\SmsConfig;
 use gitnarsoftsms\models\SmsConfigHeader;
 use gitnarsoftsms\models\SmsConfigFormData;
 use gitnarsoftsms\models\SmsCommunication;
-use yii\helpers\ArrayHelper;
 
 /**
- * SmsServices: Set config for send sms
+ * SmsService: Set config for send sms
  *
  * @category  PHP
  * @package   SMS
@@ -17,83 +17,8 @@ use yii\helpers\ArrayHelper;
  * @license   2018 GirnarSoft Pvt. Ltd.
  * @link      http://www.girnarsoft.com
  */
-class SmsServices implements interfaces\ISmsServices
+class SmsService implements interfaces\ISmsService
 {
-    /**
-     * save: Save sms config data & headers
-     * 
-     * @access public
-     * 
-     * @param array $data
-     * 
-     * @return SmsConfig
-     */
-    public function save(array $data): SmsConfig
-    {
-        if(!empty($data['SmsConfig']['_id'])) {
-            $model = SmsConfig::findOne($data['SmsConfig']['_id']);
-        } else {
-            $model = new SmsConfig();
-        }
-
-        $model->load($data);
-        
-        if($model->save()) {
-            $this->saveSmsConfigFormData($model, $data['SmsConfigFormData']);
-            $this->saveSmsConfigHeader($model, $data['SmsConfigHeader']);
-        }
-        
-        return $model;
-    }
-
-    /**
-     * saveSmsConfigFormData: Save sms config form data values for get/post
-     * 
-     * @access private
-     * 
-     * @param SmsConfig $smsConfig
-     * @param array $data
-     * 
-     * @return void
-     */
-    private function saveSmsConfigFormData(SmsConfig $smsConfig, array $data): void
-    {
-        SmsConfigFormData::deleteAll(['sms_config_id' => (string) $smsConfig->_id]);
-
-        foreach($data as $row) {
-            if(!empty($row['data_key'])) {
-                $model = new SmsConfigFormData();
-                $model->load(['SmsConfigFormData' => $row]);
-                $model->sms_config_id = (string) $smsConfig->_id;
-                $model->save();
-            }
-        }
-    }
-
-    /**
-     * saveSmsConfigHeader: Save sms config headers for get/post
-     * 
-     * @access private
-     * 
-     * @param SmsConfig $smsConfig
-     * @param array $data
-     * 
-     * @return void
-     */
-    private function saveSmsConfigHeader(SmsConfig $smsConfig, array $data): void
-    {
-        SmsConfigHeader::deleteAll(['sms_config_id' => (string) $smsConfig->_id]);
-
-        foreach($data as $row) {
-            if(!empty($row['header_key'])) {
-                $model = new SmsConfigHeader();
-                $model->load(['SmsConfigHeader' => $row]);
-                $model->sms_config_id = (string) $smsConfig->_id;
-                $model->save();
-            }
-        }
-    }
-
     /**
      * check: Check sms config by hitting data to sms service
      * 
@@ -125,15 +50,8 @@ class SmsServices implements interfaces\ISmsServices
      */
     public function sendSms(string $username, string $password, array $data): array
     {
-        $model = SmsCommunication::findOne(['username' => $username]);
-        $hash = \Yii::$app->getSecurity()->generatePasswordHash($password);
+        $model = (new CommunicationService())->getUser($username, $password);
         
-        if (!$model) {
-            throw new \yii\web\NotFoundHttpException("$username: Configration not availabel");
-        } elseif (!$model->password != $hash) {
-            throw new \yii\web\NotFoundHttpException("$username: Invalid credentials");
-        }
-
         $params['SmsConfig'] = $model->smsConfig->attributes;
         $params['SmsConfigFormData'] = [];
         $params['SmsConfigHeader'] = [];
@@ -212,13 +130,13 @@ class SmsServices implements interfaces\ISmsServices
     }
 
     /**
-     * getSmsServices: Return all sms config service providers list
+     * getSmsService: Return all sms config service providers list
      * 
      * @access public
      * 
      * @return array
      */
-    public function getSmsServices(): array
+    public function getSmsService(): array
     {
         $services = [];
         $resuts = SmsConfig::find()->all();

@@ -2,10 +2,10 @@
 
 namespace gitnarsoftsms\controllers;
 
-use gitnarsoftsms\Sms;
 use yii\web\Response;
 use gitnarsoftsms\models\SmsCommunication;
 use yii\helpers\ArrayHelper;
+use gitnarsoftsms\services\SmsService;
 
 /**
  * SmsCommunicationController for all types of sms service communication
@@ -20,6 +20,14 @@ use yii\helpers\ArrayHelper;
  */
 class SmsCommunicationController extends \yii\web\Controller
 {
+    private $smsService;
+
+    public function __construct($id, Module $module, SmsService $smsService, $config = [])
+    {
+        $this->smsService = $smsService;
+        parent::__construct($id, $module, $config);
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -92,7 +100,7 @@ class SmsCommunicationController extends \yii\web\Controller
         
         return $this->render('create', [
             'model' => $model,
-            'smsServices' => ArrayHelper::map(Sms::getSmsServices(), '_id', 'name')
+            'smsService' => ArrayHelper::map($this->smsService->getSmsService(), '_id', 'name')
         ]);
     }
     
@@ -125,7 +133,7 @@ class SmsCommunicationController extends \yii\web\Controller
 
         return $this->render('update', [
             'model' => $model,
-            'smsServices' => ArrayHelper::map(Sms::getSmsServices(), '_id', 'name')
+            'smsService' => ArrayHelper::map($this->smsService->getSmsService(), '_id', 'name')
         ]);
     }
 

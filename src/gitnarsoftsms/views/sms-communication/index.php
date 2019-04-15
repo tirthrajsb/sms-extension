@@ -21,6 +21,14 @@ $this->params['breadcrumbs'][] = $this->title;
                 'value' => 'smsConfig.name',
             ],
             'username',
+            'ip',
+            [
+                'attribute' => 'status',
+                'value' => function ($model) {
+                    $status = SmsCommunication::getConstantList('STATUS_', SmsCommunication::className());
+                    return $status[$model['status']];
+                }
+            ],
             'updated_at:date',
             'created_at:date',
             [

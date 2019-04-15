@@ -1,6 +1,7 @@
 <?php
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
+use gitnarsoftsms\models\SmsCommunication;
 ?>
 <div class="sms-form">
     <?php $form = ActiveForm::begin(['id' => 'sms-config']); ?>
@@ -13,7 +14,8 @@ use yii\widgets\ActiveForm;
                     <div class="form-group col-md-12">
                         <?= 
                         $form->field($model, 'sms_config_id')
-                            ->dropDownList($smsServices, ['prompt' => 'Select'])
+                            ->dropDownList($smsService, ['prompt' => 'Select'])
+                            ->label(\Yii::t('app', 'SMS Service'))
                         ?>
                     </div>
                     <div class="form-group col-md-12">
@@ -28,6 +30,17 @@ use yii\widgets\ActiveForm;
                             <?= $form->field($model, 'confirmPassword')->passwordInput() ?>
                         </div>
                     <?php endif; ?>
+
+                    <div class="form-group col-md-12">
+                        <?= $form->field($model, 'ip')->textInput()->label(\Yii::t('app', 'IP (comma separated or leave blank for no restriction)')) ?>
+                    </div>
+
+                    <div class="form-group col-md-12">
+                        <?=
+                        $form->field($model, 'status')
+                            ->dropDownList(SmsCommunication::getConstantList('STATUS_', SmsCommunication::className()))
+                        ?>
+                    </div>
                 </div>
                 <div class="form-group col-md-6">
                     <div class="form-group col-md-12">

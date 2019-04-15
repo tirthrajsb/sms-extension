@@ -1,9 +1,7 @@
 <?php
 use yii\helpers\Html;
 use yii\widgets\DetailView;
-use yii\grid\GridView;
-use yii\data\ActiveDataProvider;
-use yii\mongodb\Query;
+use gitnarsoftsms\models\SmsCommunication;
 
 $this->title = \Yii::t('app', 'View SMS Communication');
 $this->params['breadcrumbs'][] = ['label' => \Yii::t('app', 'SMS Communication List'), 'url' => ['index']];
@@ -26,7 +24,15 @@ $this->params['breadcrumbs'][] = $this->title;
                 }
             ],
             'username',
+            'ip',
             'description',
+            [
+                'label' => 'Status',
+                'value' => function ($model){
+                    $status = SmsCommunication::getConstantList('STATUS_', SmsCommunication::className());
+                    return $status[$model->status];
+                }
+            ],
             'updated_at:date',
             'created_at:date'
         ],
