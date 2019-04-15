@@ -20,6 +20,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'timeout',
             'type',
             'url',
+            'response_format',
             'updated_at:date',
             'created_at:date'
         ],

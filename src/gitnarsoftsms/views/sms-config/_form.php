@@ -27,17 +27,20 @@ use gitnarsoftsms\models\SmsConfigHeader;
             <div class="row">
                 
                 <div class="form-group col-md-2">
-                    <?= $form->field($model, 'type')->dropDownList([
-                        SmsConfig::TYPE_GET => SmsConfig::TYPE_GET,
-                        SmsConfig::TYPE_POST => SmsConfig::TYPE_POST,
-                        SmsConfig::TYPE_JSON => SmsConfig::TYPE_JSON
-                    ])->label(\Yii::t('app', 'Request Type')) ?>
+                    <?= $form->field($model, 'type')
+                        ->dropDownList(SmsConfig::getConstantList('TYPE_', SmsConfig::className()))
+                        ->label(\Yii::t('app', 'Request Type')) ?>
                 </div>
 
-                <div class="form-group col-md-10">
+                <div class="form-group col-md-8">
                     <?= $form->field($model, 'url')->textInput() ?>
                 </div>
 
+                <div class="form-group col-md-2">
+                    <?= $form->field($model, 'response_format')
+                        ->dropDownList(SmsConfig::getConstantList('FORMAT_', \yii\httpclient\Client::className()))
+                        ->label(\Yii::t('app', 'Request Type')) ?>
+                </div>
             </div>
         </div>
 

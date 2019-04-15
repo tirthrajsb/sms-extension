@@ -19,6 +19,7 @@ class SmsConfig extends ActiveRecord
     const TYPE_GET = 'GET';
     const TYPE_POST = 'POST';
     const TYPE_JSON = 'JSON';
+    const TYPE_XML = 'XML';
 
     public static function collectionName()
     {
@@ -28,14 +29,14 @@ class SmsConfig extends ActiveRecord
     public function rules()
     {
         return [
-            [['name', 'type', 'url', 'timeout'], 'required'],
+            [['name', 'type', 'url', 'response_format', 'timeout'], 'required'],
             [['timeout', 'updated_at', 'created_at'], 'integer']
         ];
     }
 
     public function attributes()
     {
-        return ['_id', 'name', 'type', 'url', 'timeout', 'updated_at', 'created_at'];
+        return ['_id', 'name', 'type', 'url', 'response_format', 'timeout', 'updated_at', 'created_at'];
     }
 
     /**

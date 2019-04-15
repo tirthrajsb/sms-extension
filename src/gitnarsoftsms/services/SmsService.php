@@ -2,6 +2,7 @@
 namespace gitnarsoftsms\services;
 
 use yii\helpers\ArrayHelper;
+use yii\httpclient\Client;
 use gitnarsoftsms\models\SmsConfig;
 use gitnarsoftsms\models\SmsConfigHeader;
 use gitnarsoftsms\models\SmsConfigFormData;
@@ -85,48 +86,70 @@ class SmsService implements interfaces\ISmsService
      */
     private function send(array $data): array
     {
-        try {
-            $url = $data['SmsConfig']['url'];
-            $postData = ArrayHelper::map($data['SmsConfigFormData'], 'data_key', 'data_value');
-            
-            //Create uri
-            if ($data['SmsConfig']['type'] == SmsConfig::TYPE_GET) {
-                $url .= '?' . http_build_query($postData);
-            }
-            
-            //Init curl
-            $curl = curl_init();
-            curl_setopt($curl, CURLOPT_URL, $url);
-            curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($curl, CURLOPT_TIMEOUT, $data['SmsConfig']['timeout']);
-
-            //Set post fields
-            if ($data['SmsConfig']['type'] == SmsConfig::TYPE_POST) {
-                curl_setopt($curl, CURLOPT_POST, true);
-                curl_setopt($curl, CURLOPT_POSTFIELDS, $postData);
-            } elseif($data['SmsConfig']['type'] == SmsConfig::TYPE_JSON) {
-                curl_setopt($curl, CURLOPT_POST, true);
-                curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($postData));
-            }
-
-            //Set header's
-            if($data['SmsConfigHeader']) {
-                $headers = [];
-                foreach($data['SmsConfigHeader'] as $header) {
-                    $headers[] = $header['header_key'] . ':' . $header['header_value'];
-                }
-
-                curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
-            }
-
-            //Execute curl
-            $response = curl_exec($curl);
-            curl_close($curl);
-
-            return ['response' => $response];
-        } catch (Exception $e) {
-            return ['exception' => $e];
+        //Set request data to send
+        $request = ArrayHelper::map($data['SmsConfigFormData'], 'data_key', 'data_value');
+        $method = $data['SmsConfig']['type'];
+        
+        //Create uri
+        $url = $data['SmsConfig']['url'];
+        
+        //Set query string if method is GET
+        if ($method == SmsConfig::TYPE_GET) {
+            $url .= '?' . http_build_query($request);
         }
+
+        //Set Request Format
+        $requestConfig = [];
+
+        if ($method == SmsConfig::TYPE_XML) {
+            $requestConfig = [
+                'format' => Client::FORMAT_XML
+            ];
+        }
+
+        //Set client config's
+        $config = [
+            'transport' => 'yii\httpclient\CurlTransport', // only cURL supports the options we need
+            'requestConfig' => $requestConfig,
+            'responseConfig' => [
+                'format' => $data['SmsConfig']['response_format']
+            ]
+        ];
+
+        $client = new Client($config);
+        $client = $client->createRequest();
+
+        //Set post method
+        if (in_array($method, [SmsConfig::TYPE_POST, SmsConfig::TYPE_JSON, SmsConfig::TYPE_XML])) {
+            $client = $client->setMethod('POST');
+        }
+        
+        //Create request
+        $client = $client->setUrl($url);
+
+        if (in_array($method, [SmsConfig::TYPE_POST, SmsConfig::TYPE_JSON, SmsConfig::TYPE_XML])) {
+            $client = $client->setData($request);
+        }
+
+        //Set options
+        $client = $client->setOptions([
+                    CURLOPT_CONNECTTIMEOUT => ($data['SmsConfig']['timeout'] ? $data['SmsConfig']['timeout'] : 5), // connection timeout
+                    CURLOPT_TIMEOUT => 10, // data receiving timeout
+                ]);
+        
+        //Set header informations
+        if($data['SmsConfigHeader']) {
+            $headers = [];
+
+            foreach($data['SmsConfigHeader'] as $header) {
+                $headers[$header['header_key']] = $header['header_value'];
+            }
+
+            $client = $client->addHeaders($headers);
+        }
+
+        $response = $client->send();
+        return $response->data;
     }
 
     /**

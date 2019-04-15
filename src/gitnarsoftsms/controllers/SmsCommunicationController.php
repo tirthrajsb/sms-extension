@@ -2,6 +2,7 @@
 
 namespace gitnarsoftsms\controllers;
 
+use yii\base\Module;
 use yii\web\Response;
 use gitnarsoftsms\models\SmsCommunication;
 use yii\helpers\ArrayHelper;
