@@ -52,6 +52,14 @@ class SmsService implements interfaces\ISmsService
     public function sendSms(string $username, string $password, array $data): array
     {
         $model = (new CommunicationService())->getUser($username, $password);
+
+        if(!empty($model->ip)) {
+            $ips = explode(',', trim($model->ip));
+
+            if(!in_array($this->getClientIp(), $ips)) {
+                throw new \yii\web\UnauthorizedHttpException('Unauthorized', 3);
+            }
+        }
         
         $params['SmsConfig'] = $model->smsConfig->attributes;
         $params['SmsConfigFormData'] = [];
@@ -150,6 +158,27 @@ class SmsService implements interfaces\ISmsService
 
         $response = $client->send();
         return $response->data;
+    }
+
+    /**
+     * getClientIp: Get client IP
+     *
+     * @return string
+     */
+    private static function getClientIp(): string
+    {
+        if (!empty($_SERVER["HTTP_X_FORWARDED_FOR"])) {
+            $clientIpAddress = $_SERVER["HTTP_X_FORWARDED_FOR"];
+        } elseif (!empty($_SERVER["REMOTE_ADDR"])) {
+            $clientIpAddress = $_SERVER["REMOTE_ADDR"];
+        } elseif (!empty($_SERVER["HTTP_CLIENT_IP"])) {
+            $clientIpAddress = $_SERVER["HTTP_CLIENT_IP"];
+        } else {
+            $clientIpAddress = $_SERVER['REMOTE_ADDR'];
+        }
+
+        $clientIpArray = explode(',', $clientIpAddress);
+        return end($clientIpArray);
     }
 
     /**
