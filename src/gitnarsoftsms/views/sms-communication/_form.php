@@ -18,10 +18,11 @@ use gitnarsoftsms\models\communication\SmsCommunication;
                             ->label(\Yii::t('app', 'SMS Service'))
                         ?>
                     </div>
-                    <div class="form-group col-md-12">
-                        <?= $form->field($model, 'username')->textInput() ?>
-                    </div>
                     <?php if ($model->isNewRecord) : ?>
+                        <div class="form-group col-md-12">
+                            <?= $form->field($model, 'username')->textInput() ?>
+                        </div>
+                    
                         <div class="form-group col-md-12">
                             <?= $form->field($model, 'password')->passwordInput() ?>
                         </div>
