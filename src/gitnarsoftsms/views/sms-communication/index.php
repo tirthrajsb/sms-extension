@@ -25,7 +25,8 @@ $this->params['breadcrumbs'][] = $this->title;
                 'value' => function ($model) {
                     $status = SmsCommunication::getConstantList('STATUS_', SmsCommunication::className());
                     return $status[$model['status']];
-                }
+                },
+                'filter' => Html::activeDropDownList($model, 'status', SmsCommunication::getConstantList('STATUS_', SmsCommunication::className()), ['class' => 'form-control', 'prompt' => 'All']),
             ],
             [
                 'attribute'=>'updated_at',

@@ -35,8 +35,8 @@ class SmsCommunicationSearch extends SmsCommunication
             $query->andWhere(['like', 'ip', $this->ip]);
         }
 
-        if($this->status) {
-            $query->andWhere(['like', 'status', $this->status]);
+        if($this->status !== '' && $this->status !== null) {
+            $query->andWhere(['status' => (int) $this->status]);
         }
         
         return $dataProvider;
