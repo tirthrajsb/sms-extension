@@ -177,15 +177,11 @@ use wbraganca\dynamicform\DynamicFormWidget;
             type: 'post',
             dataType: 'json',
             data: $('form#sms-config').serialize(),
-            before: function() {
-
-            },
             success: function(data) {
-                if(data['response']) {
-                    alert(data['response']);
-                } else if(data['exception']) {
-                    alert(data['exception']);
-                }
+                alert(JSON.stringify(data))
+            },
+            error: function (jqXHR, exception) {
+                alert("Status code: " + jqXHR.status + ", Exception: " + exception);
             }
         });
     });

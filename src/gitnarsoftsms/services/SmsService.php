@@ -120,6 +120,15 @@ class SmsService implements interfaces\ISmsService
                 "message" => $exception->getMessage(),
                 "code" => SmsConfig::CODE_EXCEPTION
             ];
+        } catch(\Exception $exception) {
+            //Set response
+            $log->response = $exception->getMessage();
+            $log->save();
+
+            return [
+                'message' => $exception->getMessage(),
+                'code' => $exception->getCode()
+            ];
         }
     }
 

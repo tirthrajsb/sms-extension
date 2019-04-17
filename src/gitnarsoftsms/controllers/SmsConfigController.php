@@ -198,7 +198,14 @@ class SmsConfigController extends Controller
         \Yii::$app->response->format = Response::FORMAT_JSON;
 
         if (\Yii::$app->request->isPost) {
-            return $this->smsService->check(\Yii::$app->request->post());
+            try {
+                return $this->smsService->check(\Yii::$app->request->post());
+            } catch(\Exception $exception) {
+                return [
+                    'message' => $exception->getMessage(),
+                    'code' => $exception->getCode()
+                ];
+            }
         }
         
         return [];
