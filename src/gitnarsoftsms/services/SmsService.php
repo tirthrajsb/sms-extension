@@ -101,7 +101,11 @@ class SmsService implements interfaces\ISmsService
             $log->response = $response;
             $log->save();
 
-            return $response;
+            return [
+                "message" => \Yii::t('app', 'Success'),
+                "code" => SmsConfig::CODE_SUCCESS,
+                "response" => $response
+            ];
         } catch (UnauthorizedHttpException $exception) {
             return [
                 "message" => $exception->getMessage(),
@@ -128,7 +132,7 @@ class SmsService implements interfaces\ISmsService
      * 
      * @return array
      */
-    private function send(array $data): array
+    private function send(array $data)
     {
         //Set request data to send
         $request = ArrayHelper::map($data['SmsConfigFormData'], 'data_key', 'data_value');
@@ -193,12 +197,7 @@ class SmsService implements interfaces\ISmsService
         }
 
         $response = $client->send();
-
-        return [
-            "message" => \Yii::t('app', 'Success'),
-            "code" => SmsConfig::CODE_SUCCESS,
-            "response" => $response->data
-        ];
+        return ($response->data ? $response->data : []);
     }
 
     /**
