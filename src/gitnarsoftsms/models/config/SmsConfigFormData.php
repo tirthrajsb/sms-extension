@@ -1,8 +1,9 @@
 <?php
-namespace gitnarsoftsms\models;
+namespace gitnarsoftsms\models\config;
 
 use yii\behaviors\AttributeTypecastBehavior;
 use yii\behaviors\TimestampBehavior;
+use gitnarsoftsms\models\ActiveRecord;
 
 /**
  * Form

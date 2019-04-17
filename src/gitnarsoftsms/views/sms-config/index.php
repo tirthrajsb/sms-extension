@@ -1,8 +1,6 @@
 <?php
 use yii\helpers\Html;
 use yii\grid\GridView;
-use yii\data\ActiveDataProvider;
-use gitnarsoftsms\models\SmsConfig;
 
 $this->title = \Yii::t('app', 'SMS Config List');
 $this->params['breadcrumbs'][] = $this->title;
@@ -11,16 +9,27 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="coupon box box-success box-body">
     <h3><?= \Yii::t('app', 'Form Data') ?></h3>
     <?= GridView::widget([
-        'dataProvider' => (new ActiveDataProvider([
-            'query' => SmsConfig::find(),
-        ])),
+        'dataProvider' => $dataProvider,
+        'filterModel' => $model,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
             'name',
             'type',
             'response_format',
-            'updated_at:date',
-            'created_at:date',
+            [
+                'attribute'=>'updated_at',
+                'value'=> function($model) {
+                    return date('M d, Y', $model['updated_at']);
+                },
+                'filter'=>false,
+            ],
+            [
+                'attribute'=>'created_at',
+                'value'=> function($model) {
+                    return date('M d, Y', $model['created_at']);
+                },
+                'filter'=>false,
+            ],
             [
                 'class' => 'yii\grid\ActionColumn',
                 'template' => '{view_form} {update_form}',

@@ -40,18 +40,9 @@ class Module extends \yii\base\Module implements BootstrapInterface
     public function bootstrap($app)
     {
         $app->getUrlManager()->addRules([
-            ['class' => 'yii\web\UrlRule', 'pattern' => 'sms-config', 'route' => $this->id . '/sms-config/index'],
-            ['class' => 'yii\web\UrlRule', 'pattern' => 'sms-config/index', 'route' => $this->id . '/sms-config/index'],
-            ['class' => 'yii\web\UrlRule', 'pattern' => 'sms-config/view/<id>', 'route' => $this->id . '/sms-config/view'],
-            ['class' => 'yii\web\UrlRule', 'pattern' => 'sms-config/create', 'route' => $this->id . '/sms-config/create'],
-            ['class' => 'yii\web\UrlRule', 'pattern' => 'sms-config/update/<id>', 'route' => $this->id . '/sms-config/update'],
-            ['class' => 'yii\web\UrlRule', 'pattern' => 'sms-config/check', 'route' => $this->id . '/sms-config/check'],
-            ['class' => 'yii\web\UrlRule', 'pattern' => 'sms-communication', 'route' => $this->id . '/sms-communication/index'],
-            ['class' => 'yii\web\UrlRule', 'pattern' => 'sms-communication/index', 'route' => $this->id . '/sms-communication/index'],
-            ['class' => 'yii\web\UrlRule', 'pattern' => 'sms-communication/view/<id>', 'route' => $this->id . '/sms-communication/view'],
-            ['class' => 'yii\web\UrlRule', 'pattern' => 'sms-communication/create', 'route' => $this->id . '/sms-communication/create'],
-            ['class' => 'yii\web\UrlRule', 'pattern' => 'sms-communication/update/<id>', 'route' => $this->id . '/sms-communication/update'],
-            ['class' => 'yii\web\UrlRule', 'pattern' => 'sms-communication/update-password/<id>', 'route' => $this->id . '/sms-communication/update-password']
+            ['class' => 'yii\web\UrlRule', 'pattern' => '<controller:(sms-log|sms-config|sms-communication)>', 'route' => $this->id . '/<controller>/index'],
+            ['class' => 'yii\web\UrlRule', 'pattern' => '<controller:(sms-log|sms-config|sms-communication)>/<action>', 'route' => $this->id . '/<controller>/<action>'],
+            ['class' => 'yii\web\UrlRule', 'pattern' => '<controller:(sms-log|sms-config|sms-communication)>/<action>/<id>', 'route' => $this->id . '/<controller>/<action>/<id>']
         ], false);
     }
 }

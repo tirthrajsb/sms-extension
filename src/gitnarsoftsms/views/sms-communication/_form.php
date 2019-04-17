@@ -1,7 +1,7 @@
 <?php
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
-use gitnarsoftsms\models\SmsCommunication;
+use gitnarsoftsms\models\communication\SmsCommunication;
 ?>
 <div class="sms-form">
     <?php $form = ActiveForm::begin(['id' => 'sms-config']); ?>

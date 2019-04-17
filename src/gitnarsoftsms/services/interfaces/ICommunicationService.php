@@ -1,7 +1,7 @@
 <?php
 namespace gitnarsoftsms\services\interfaces;
 
-use gitnarsoftsms\models\SmsCommunication;
+use gitnarsoftsms\models\communication\SmsCommunication;
 
 /**
  * CommunicationService: All sms communication services

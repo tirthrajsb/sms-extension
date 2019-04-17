@@ -4,7 +4,8 @@ namespace gitnarsoftsms\controllers;
 
 use yii\base\Module;
 use yii\web\Response;
-use gitnarsoftsms\models\SmsCommunication;
+use gitnarsoftsms\models\communication\SmsCommunicationSearch;
+use gitnarsoftsms\models\communication\SmsCommunication;
 use yii\helpers\ArrayHelper;
 use gitnarsoftsms\services\SmsService;
 
@@ -19,7 +20,7 @@ use gitnarsoftsms\services\SmsService;
  * @link      carbay.com
  *
  */
-class SmsCommunicationController extends \yii\web\Controller
+class SmsCommunicationController extends Controller
 {
     private $smsService;
 
@@ -27,19 +28,6 @@ class SmsCommunicationController extends \yii\web\Controller
     {
         $this->smsService = $smsService;
         parent::__construct($id, $module, $config);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function beforeAction($action)
-    {
-        if (\Yii::$app->getUser()->isGuest) {
-            return $this->redirect(\Yii::$app->user->loginUrl)->send();
-        }
-        
-        \Yii::$app->response->format = Response::FORMAT_HTML;
-        return parent::beforeAction($action);
     }
 
     /**
@@ -51,7 +39,13 @@ class SmsCommunicationController extends \yii\web\Controller
      */
     public function actionIndex()
     {
-        return $this->render('index');
+        $model = new SmsCommunicationSearch();
+        $dataProvider = $model->search(\Yii::$app->request->get());
+        
+        return $this->render('index', [
+            'model' => $model,
+            'dataProvider' => $dataProvider,
+        ]);
     }
 
     /**

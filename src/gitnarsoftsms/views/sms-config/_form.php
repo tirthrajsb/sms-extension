@@ -2,9 +2,8 @@
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\widgets\ActiveForm;
-use gitnarsoftsms\models\SmsConfig;
+use gitnarsoftsms\models\config\SmsConfig;
 use wbraganca\dynamicform\DynamicFormWidget;
-use gitnarsoftsms\models\SmsConfigHeader;
 
 ?>
 <div class="sms-form">

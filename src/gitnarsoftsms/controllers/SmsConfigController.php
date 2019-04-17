@@ -4,9 +4,10 @@ namespace gitnarsoftsms\controllers;
 
 use yii\base\Module;
 use yii\web\Response;
-use gitnarsoftsms\models\SmsConfig;
-use gitnarsoftsms\models\SmsConfigHeader;
-use gitnarsoftsms\models\SmsConfigFormData;
+use gitnarsoftsms\models\config\SmsConfig;
+use gitnarsoftsms\models\config\SmsConfigSearch;
+use gitnarsoftsms\models\config\SmsConfigHeader;
+use gitnarsoftsms\models\config\SmsConfigFormData;
 use gitnarsoftsms\services\SmsService;
 
 /**
@@ -20,7 +21,7 @@ use gitnarsoftsms\services\SmsService;
  * @link      carbay.com
  *
  */
-class SmsConfigController extends \yii\web\Controller
+class SmsConfigController extends Controller
 {
     private $smsService;
 
@@ -28,19 +29,6 @@ class SmsConfigController extends \yii\web\Controller
     {
         $this->smsService = $smsService;
         parent::__construct($id, $module, $config);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function beforeAction($action)
-    {
-        if (\Yii::$app->getUser()->isGuest) {
-            return $this->redirect(\Yii::$app->user->loginUrl)->send();
-        }
-        
-        \Yii::$app->response->format = Response::FORMAT_HTML;
-        return parent::beforeAction($action);
     }
 
     /**
@@ -52,7 +40,13 @@ class SmsConfigController extends \yii\web\Controller
      */
     public function actionIndex()
     {
-        return $this->render('index');
+        $model = new SmsConfigSearch();
+        $dataProvider = $model->search(\Yii::$app->request->get());
+        
+        return $this->render('index', [
+            'model' => $model,
+            'dataProvider' => $dataProvider,
+        ]);
     }
 
     /**

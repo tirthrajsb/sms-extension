@@ -1,11 +1,12 @@
 <?php
-namespace gitnarsoftsms\models;
+namespace gitnarsoftsms\models\log;
 
 use yii\behaviors\AttributeTypecastBehavior;
 use yii\behaviors\TimestampBehavior;
+use gitnarsoftsms\models\ActiveRecord;
 
 /**
- * Form
+ * SmsLog
  *
  * @category  PHP
  * @package   Model
@@ -14,29 +15,25 @@ use yii\behaviors\TimestampBehavior;
  * @license   2018 GirnarSoft Pvt. Ltd.
  * @link      http://www.girnarsoft.com
  */
-class SmsConfig extends ActiveRecord
+class SmsLog extends ActiveRecord
 {
-    const TYPE_GET = 'GET';
-    const TYPE_POST = 'POST';
-    const TYPE_JSON = 'JSON';
-    const TYPE_XML = 'XML';
 
     public static function collectionName()
     {
-        return 'sms_config';
+        return 'sms_log';
     }
 
     public function rules()
     {
         return [
-            [['name', 'type', 'url', 'response_format', 'timeout'], 'required'],
-            [['timeout', 'updated_at', 'created_at'], 'integer']
+            [['username', 'request', 'response'], 'required'],
+            [['updated_at', 'created_at'], 'integer']
         ];
     }
 
     public function attributes()
     {
-        return ['_id', 'name', 'type', 'url', 'response_format', 'timeout', 'updated_at', 'created_at'];
+        return ['_id', 'username', 'request', 'response', 'updated_at', 'created_at'];
     }
 
     /**
@@ -63,21 +60,5 @@ class SmsConfig extends ActiveRecord
                 'typecastAfterFind' => false,
             ],
         ];
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getSmsConfigHeaders()
-    {
-        return SmsConfigHeader::find()->where(['sms_config_id' => (string) $this->_id])->all();
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getSmsConfigFormData()
-    {
-        return SmsConfigFormData::find()->where(['sms_config_id' => (string) $this->_id])->all();
     }
 }

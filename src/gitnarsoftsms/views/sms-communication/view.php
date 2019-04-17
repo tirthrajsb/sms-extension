@@ -1,7 +1,7 @@
 <?php
 use yii\helpers\Html;
 use yii\widgets\DetailView;
-use gitnarsoftsms\models\SmsCommunication;
+use gitnarsoftsms\models\communication\SmsCommunication;
 
 $this->title = \Yii::t('app', 'View SMS Communication');
 $this->params['breadcrumbs'][] = ['label' => \Yii::t('app', 'SMS Communication List'), 'url' => ['index']];

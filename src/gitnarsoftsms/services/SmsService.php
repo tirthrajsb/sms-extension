@@ -3,10 +3,13 @@ namespace gitnarsoftsms\services;
 
 use yii\helpers\ArrayHelper;
 use yii\httpclient\Client;
-use gitnarsoftsms\models\SmsConfig;
-use gitnarsoftsms\models\SmsConfigHeader;
-use gitnarsoftsms\models\SmsConfigFormData;
-use gitnarsoftsms\models\SmsCommunication;
+use yii\web\UnauthorizedHttpException;
+use yii\httpclient\Exception;
+use gitnarsoftsms\models\config\SmsConfig;
+use gitnarsoftsms\models\config\SmsConfigHeader;
+use gitnarsoftsms\models\config\SmsConfigFormData;
+use gitnarsoftsms\models\communication\SmsCommunication;
+use gitnarsoftsms\models\log\SmsLog;
 
 /**
  * SmsService: Set config for send sms
@@ -51,36 +54,69 @@ class SmsService implements interfaces\ISmsService
      */
     public function sendSms(string $username, string $password, array $data): array
     {
-        $model = (new CommunicationService())->getUser($username, $password);
+        //Create log model object
+        $log = new SmsLog();
 
-        if(!empty($model->ip)) {
-            $ips = explode(',', trim($model->ip));
+        //Set User
+        $log->username = $username;
+        $log->request = "Not set";
 
-            if(!in_array($this->getClientIp(), $ips)) {
-                throw new \yii\web\UnauthorizedHttpException('Unauthorized', 3);
+        try {
+            $model = (new CommunicationService())->getUser($username, $password);
+
+            if(!empty($model->ip)) {
+                $ips = explode(',', trim($model->ip));
+
+                if(!in_array($this->getClientIp(), $ips)) {
+                    throw new UnauthorizedHttpException('Unauthorized IP', SmsConfig::CODE_UNAUTHORIZED);
+                }
             }
-        }
-        
-        $params['SmsConfig'] = $model->smsConfig->attributes;
-        $params['SmsConfigFormData'] = [];
-        $params['SmsConfigHeader'] = [];
+            
+            $params['SmsConfig'] = $model->smsConfig->attributes;
+            $params['SmsConfigFormData'] = [];
+            $params['SmsConfigHeader'] = [];
 
-        if($model->smsConfig->smsConfigFormData) {
-            foreach($model->smsConfig->smsConfigFormData as $formData) {
-                $params['SmsConfigFormData'][] = [
-                    'data_key' => $formData->data_key,
-                    'data_value' => \Yii::t('app', $formData->data_value, $data),
-                ];
+            if($model->smsConfig->smsConfigFormData) {
+                foreach($model->smsConfig->smsConfigFormData as $formData) {
+                    $params['SmsConfigFormData'][] = [
+                        'data_key' => $formData->data_key,
+                        'data_value' => \Yii::t('app', $formData->data_value, $data),
+                    ];
+                }
             }
-        }
 
-        if($model->smsConfig->smsConfigHeaders) {
-            foreach($model->smsConfig->smsConfigHeaders as $headers) {
-                $params['SmsConfigHeader'][] = $headers->attributes;
+            if($model->smsConfig->smsConfigHeaders) {
+                foreach($model->smsConfig->smsConfigHeaders as $headers) {
+                    $params['SmsConfigHeader'][] = $headers->attributes;
+                }
             }
-        }
 
-        return $this->send($params);
+            //Set request
+            $log->request = $params;
+
+            //Send SMS
+            $response = $this->send($params);
+
+            //Set response
+            $log->response = $response;
+            $log->save();
+
+            return $response;
+        } catch (UnauthorizedHttpException $exception) {
+            return [
+                "message" => $exception->getMessage(),
+                "code" => SmsConfig::CODE_UNAUTHORIZED
+            ];
+        } catch (Exception $exception) {
+            //Set response
+            $log->response = $exception->getMessage();
+            $log->save();
+
+            return [
+                "message" => $exception->getMessage(),
+                "code" => SmsConfig::CODE_EXCEPTION
+            ];
+        }
     }
 
     /**
@@ -157,7 +193,12 @@ class SmsService implements interfaces\ISmsService
         }
 
         $response = $client->send();
-        return $response->data;
+
+        return [
+            "message" => \Yii::t('app', 'Success'),
+            "code" => SmsConfig::CODE_SUCCESS,
+            "response" => $response->data
+        ];
     }
 
     /**
