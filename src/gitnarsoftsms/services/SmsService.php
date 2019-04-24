@@ -93,7 +93,7 @@ class SmsService implements interfaces\ISmsService
             }
 
             //Set request
-            $log->request = $params;
+            $log->request = ArrayHelper::map($params['SmsConfigFormData'], 'data_key', 'data_value');
 
             //Send SMS
             $response = $this->send($params);
