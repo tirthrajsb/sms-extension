@@ -59,6 +59,7 @@ class SmsService implements interfaces\ISmsService
 
         //Set User
         $log->username = $username;
+        $log->ip = $this->getClientIp();
         $log->request = "Not set";
 
         try {

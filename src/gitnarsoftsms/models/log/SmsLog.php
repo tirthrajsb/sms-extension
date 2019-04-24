@@ -26,14 +26,14 @@ class SmsLog extends ActiveRecord
     public function rules()
     {
         return [
-            [['username', 'request', 'response'], 'required'],
+            [['username', 'ip', 'request', 'response'], 'required'],
             [['updated_at', 'created_at'], 'integer']
         ];
     }
 
     public function attributes()
     {
-        return ['_id', 'username', 'request', 'response', 'updated_at', 'created_at'];
+        return ['_id', 'username', 'ip', 'request', 'response', 'updated_at', 'created_at'];
     }
 
     /**

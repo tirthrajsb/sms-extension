@@ -14,6 +14,7 @@ $this->params['breadcrumbs'][] = $this->title;
         'model' => $model,
         'attributes' => [
             'username',
+            'ip',
             [
                 'attribute' => 'request',
                 'value' => function($model) {
