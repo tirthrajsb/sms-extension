@@ -6,9 +6,6 @@ use yii\httpclient\Client;
 use yii\web\UnauthorizedHttpException;
 use yii\httpclient\Exception;
 use gitnarsoftsms\models\config\SmsConfig;
-use gitnarsoftsms\models\config\SmsConfigHeader;
-use gitnarsoftsms\models\config\SmsConfigFormData;
-use gitnarsoftsms\models\communication\SmsCommunication;
 use gitnarsoftsms\models\log\SmsLog;
 
 /**
