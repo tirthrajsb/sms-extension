@@ -35,13 +35,14 @@ class SmsConfig extends ActiveRecord
     {
         return [
             [['name', 'type', 'url', 'response_format', 'timeout'], 'required'],
-            [['timeout', 'updated_at', 'created_at'], 'integer']
+            [['timeout', 'updated_at', 'created_at'], 'integer'],
+            [['username', 'password'], 'safe']
         ];
     }
 
     public function attributes()
     {
-        return ['_id', 'name', 'type', 'url', 'response_format', 'timeout', 'updated_at', 'created_at'];
+        return ['_id', 'name', 'username', 'password', 'type', 'url', 'response_format', 'timeout', 'updated_at', 'created_at'];
     }
 
     /**

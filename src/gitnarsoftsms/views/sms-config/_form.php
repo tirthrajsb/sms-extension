@@ -20,6 +20,15 @@ use wbraganca\dynamicform\DynamicFormWidget;
                     <?= $form->field($model, 'timeout')->textInput() ?>
                 </div>
             </div>
+
+            <div class="row">
+                <div class="form-group col-md-6">
+                    <?= $form->field($model, 'username')->textInput() ?>
+                </div>
+                <div class="form-group col-md-6">
+                <?= $form->field($model, 'password')->passwordInput() ?>
+                </div>
+            </div>
         </div>
 
         <div class="box box-success box-body">

@@ -191,6 +191,12 @@ class SmsService implements interfaces\ISmsService
                     CURLOPT_CONNECTTIMEOUT => ($data['SmsConfig']['timeout'] ? $data['SmsConfig']['timeout'] : 5), // connection timeout
                     CURLOPT_TIMEOUT => 10, // data receiving timeout
                 ]);
+
+        if (!empty($data['SmsConfig']['username'])) {
+            $client = $client->addOptions([
+                CURLOPT_USERPWD => $data['SmsConfig']['username'] . ':' . $data['SmsConfig']['password']
+            ]);
+        }
         
         //Set header informations
         if($data['SmsConfigHeader']) {
