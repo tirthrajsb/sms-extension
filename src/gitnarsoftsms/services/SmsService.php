@@ -99,11 +99,7 @@ class SmsService implements interfaces\ISmsService
             $log->response = $response;
             $log->save();
 
-            return [
-                "message" => \Yii::t('app', 'Success'),
-                "code" => SmsConfig::CODE_SUCCESS,
-                "response" => $response
-            ];
+            return $this->getResponseCode($model->smsConfig, $log);
         } catch (UnauthorizedHttpException $exception) {
             return [
                 "message" => $exception->getMessage(),
@@ -128,6 +124,61 @@ class SmsService implements interfaces\ISmsService
                 'code' => $exception->getCode()
             ];
         }
+    }
+
+    private function getResponseCode(SmsConfig $smsConfig, SmsLog $log)
+    {
+        //Check for success code
+        $successField = $smsConfig->success_field ? explode('.', $smsConfig->success_field) : [];
+        $successValue = $smsConfig->success_value ? explode(',', $smsConfig->success_value) : [];
+        $data = $log->response;
+        $code = null;
+        
+        if (!empty($successField)) {
+            foreach($successField as $key) {
+                $code = $data[$key] ?? null;
+            }
+
+            if (in_array($code, $successValue)) {
+                return [
+                    "message" => \Yii::t('app', 'Success'),
+                    "code" => SmsConfig::CODE_SUCCESS,
+                    "response" => $log->response
+                ];
+            }
+
+            return [
+                "message" => \Yii::t('app', 'error'),
+                "code" => SmsConfig::CODE_ERROR,
+                "response" => $log->response
+            ];
+        }
+
+        //Check for error code
+        $errorField = $smsConfig->error_field ? explode('.', $smsConfig->error_field) : [];
+        $errorValue = $smsConfig->error_value ? explode(',', $smsConfig->error_value) : [];
+        $code = null;
+        
+        if (!empty($errorField)) {
+            foreach($errorField as $key) {
+                $code = $data[$key] ?? null;
+            }
+
+            if (in_array($code, $errorValue)) {
+                return [
+                    "message" => \Yii::t('app', 'error'),
+                    "code" => SmsConfig::CODE_ERROR,
+                    "response" => $log->response
+                ];
+            }
+        }
+
+        //If no error & success code set
+        return [
+            "message" => \Yii::t('app', 'Success'),
+            "code" => SmsConfig::CODE_SUCCESS,
+            "response" => $log->response
+        ];
     }
 
     /**

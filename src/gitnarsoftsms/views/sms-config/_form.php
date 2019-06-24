@@ -13,22 +13,22 @@ use wbraganca\dynamicform\DynamicFormWidget;
         <?php endif; ?>
         <div class="box box-success box-body">
             <div class="row">
-                <div class="form-group col-md-6">
+                <div class="form-group col-md-3">
                     <?= $form->field($model, 'name')->textInput() ?>
                 </div>
-                <div class="form-group col-md-6">
+            
+                <div class="form-group col-md-3">
                     <?= $form->field($model, 'timeout')->textInput() ?>
                 </div>
-            </div>
-
-            <div class="row">
-                <div class="form-group col-md-6">
+            
+                <div class="form-group col-md-3">
                     <?= $form->field($model, 'username')->textInput() ?>
                 </div>
-                <div class="form-group col-md-6">
-                <?= $form->field($model, 'password')->passwordInput() ?>
+                
+                <div class="form-group col-md-3">
+                    <?= $form->field($model, 'password')->passwordInput() ?>
                 </div>
-            </div>
+            </div>            
         </div>
 
         <div class="box box-success box-body">
@@ -47,7 +47,29 @@ use wbraganca\dynamicform\DynamicFormWidget;
                 <div class="form-group col-md-2">
                     <?= $form->field($model, 'response_format')
                         ->dropDownList(SmsConfig::getConstantList('FORMAT_', \yii\httpclient\Client::className()))
-                        ->label(\Yii::t('app', 'Request Type')) ?>
+                        ->label(\Yii::t('app', 'Response Format')) ?>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="form-group col-md-3">
+                    <?= $form->field($model, 'success_field')->textInput() ?>
+                    <span class="hint">Ex. data.0.status</span>
+                </div>
+
+                <div class="form-group col-md-3">
+                    <?= $form->field($model, 'success_value')->textInput() ?>
+                    <span class="hint">Comma separated ex. 2,3,5</span>
+                </div>
+
+                <div class="form-group col-md-3">
+                    <?= $form->field($model, 'error_field')->textInput() ?>
+                    <span class="hint">Ex. data.0.error</span>
+                </div>
+
+                <div class="form-group col-md-3">
+                    <?= $form->field($model, 'error_value')->textInput() ?>
+                    <span class="hint">Comma separated ex. 2,3,5</span>
                 </div>
             </div>
         </div>
@@ -182,7 +204,7 @@ use wbraganca\dynamicform\DynamicFormWidget;
 <script>
     document.getElementById('gs-sms-check').addEventListener('click', function() {
         $.ajax({
-            url: "<?= Url::to('/sms-config/check') ?>",
+            url: "<?= Url::to('/backend.php/sms-config/check') ?>",
             type: 'post',
             dataType: 'json',
             data: $('form#sms-config').serialize(),

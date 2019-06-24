@@ -25,6 +25,7 @@ class SmsConfig extends ActiveRecord
     const CODE_SUCCESS = 1;
     const CODE_UNAUTHORIZED = 2;
     const CODE_EXCEPTION = 3;
+    const CODE_ERROR = 4;
 
     public static function collectionName()
     {
@@ -36,13 +37,13 @@ class SmsConfig extends ActiveRecord
         return [
             [['name', 'type', 'url', 'response_format', 'timeout'], 'required'],
             [['timeout', 'updated_at', 'created_at'], 'integer'],
-            [['username', 'password'], 'safe']
+            [['username', 'password', 'success_field', 'success_value', 'error_field', 'error_value'], 'safe']
         ];
     }
 
     public function attributes()
     {
-        return ['_id', 'name', 'username', 'password', 'type', 'url', 'response_format', 'timeout', 'updated_at', 'created_at'];
+        return ['_id', 'name', 'username', 'password', 'type', 'url', 'response_format', 'timeout', 'success_field', 'success_value', 'error_field', 'error_value', 'updated_at', 'created_at'];
     }
 
     /**
