@@ -261,7 +261,13 @@ class SmsService implements interfaces\ISmsService
         }
 
         $response = $client->send();
-        return ($response->data ? $response->data : []);
+        //return ($response->data ? $response->data : []);
+
+        if (!empty($response->content)) {
+            return [$response->content];
+        } else {
+            return ($response->data ? $response->data : []);
+        }
     }
 
     /**
